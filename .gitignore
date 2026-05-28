@@ -1,0 +1,8 @@
+# Rapports CSV générés par les scripts
+analysis/*.csv
+
+# Logs de migration et d'analyse
+*.log
+
+# Fichiers temporaires
+*.tmp
