@@ -175,6 +175,7 @@ function Test-LDSObjectExists {
 }
 
 function New-LDSOU {
+    [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)][string]$ParentDN,
         [Parameter(Mandatory)][string]$OUName
@@ -200,6 +201,7 @@ function New-LDSOU {
 }
 
 function New-LDSInetOrgPerson {
+    [CmdletBinding(SupportsShouldProcess)]
     <#
     .SYNOPSIS
         Crée un objet inetOrgPerson dans LDS avec les attributs fournis.
@@ -231,6 +233,7 @@ function New-LDSInetOrgPerson {
 }
 
 function Update-LDSDescription {
+    [CmdletBinding(SupportsShouldProcess)]
     <#
     .SYNOPSIS
         Met à jour l'attribut description d'un objet LDS existant (JSON fusionné).
@@ -273,6 +276,8 @@ function Initialize-LDSStructure {
 #region --- EXPORT DES UTILISATEURS ---
 
 function Export-UsersToLDS {
+    [CmdletBinding(SupportsShouldProcess)]
+    param()
     Write-Log '=== Export des utilisateurs ===' -Level SECTION
 
     $props = @(
@@ -374,6 +379,8 @@ function Export-UsersToLDS {
 #region --- EXPORT DES GROUPES ---
 
 function Export-GroupsToLDS {
+    [CmdletBinding(SupportsShouldProcess)]
+    param()
     Write-Log '=== Export des groupes de sécurité ===' -Level SECTION
 
     $props = @(
@@ -458,6 +465,8 @@ function Export-GroupsToLDS {
 #region --- EXPORT DES ORDINATEURS ---
 
 function Export-ComputersToLDS {
+    [CmdletBinding(SupportsShouldProcess)]
+    param()
     Write-Log '=== Export des ordinateurs ===' -Level SECTION
 
     $props = @(
@@ -585,6 +594,8 @@ function Get-ADSchemaGuidMap {
 }
 
 function Export-DelegationsToLDS {
+    [CmdletBinding(SupportsShouldProcess)]
+    param()
     Write-Log '=== Export des délégations (analyse ACL) ===' -Level SECTION
 
     # Charger le drive AD si nécessaire
@@ -703,6 +714,8 @@ function Export-DelegationsToLDS {
 #region --- MAPPING DES APPARTENANCES AUX GROUPES ---
 
 function Set-GroupMemberships {
+    [CmdletBinding(SupportsShouldProcess)]
+    param()
     Write-Log '=== Mapping des appartenances aux groupes ===' -Level SECTION
 
     if ($Script:GroupDNMap.Count -eq 0) {
