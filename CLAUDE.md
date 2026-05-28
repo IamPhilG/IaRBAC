@@ -14,7 +14,7 @@ La démarche repose sur une copie filtrée de l'AD vers une instance **AD LDS** 
 
 ## Structure du projet
 
-```
+```text
 IARBAC/
 ├── CLAUDE.md                    # Ce fichier
 ├── scripts/
@@ -31,20 +31,24 @@ IARBAC/
 ## Prérequis
 
 ### Environnement source (AD DS)
+
 - Windows Server 2016+ avec le rôle **Active Directory Domain Services**
 - Compte avec droits en **lecture sur l'annuaire** et accès aux ACL des OUs (`Read Control` sur les objets)
 - Module PowerShell **ActiveDirectory** installé :
+
   ```powershell
   Install-WindowsFeature RSAT-AD-PowerShell
   ```
 
 ### Environnement cible (AD LDS)
+
 - Windows Server avec le rôle **Active Directory Lightweight Directory Services (AD LDS)** installé
 - Instance LDS créée (via `adaminstall` ou la console ADSI Edit)
 - Port LDAP configuré (ex. 50389 pour éviter les conflits avec l'AD)
 - Compte avec droits d'écriture sur l'instance LDS
 
 ### Extension du schéma LDS (recommandé)
+
 Par défaut, le schéma LDS est limité (inetOrgPerson, organizationalUnit). Pour stocker des objets
 de type `user`, `group`, `computer` natifs, importer les fichiers LDF fournis avec Windows Server :
 
@@ -66,6 +70,7 @@ ldifde -i -u -f "C:\Windows\ADAM\MS-User.ldf" ^
 ## Utilisation du script
 
 ### Cas minimal
+
 ```powershell
 .\scripts\Export-ADToLDS.ps1 `
     -LDSServer "lds01.corp.local" `
@@ -74,6 +79,7 @@ ldifde -i -u -f "C:\Windows\ADAM\MS-User.ldf" ^
 ```
 
 ### Cas complet avec options
+
 ```powershell
 .\scripts\Export-ADToLDS.ps1 `
     -LDSServer "lds01.corp.local" `
@@ -87,12 +93,14 @@ ldifde -i -u -f "C:\Windows\ADAM\MS-User.ldf" ^
 ```
 
 ### Simulation (WhatIf)
+
 ```powershell
 .\scripts\Export-ADToLDS.ps1 -LDSServer "lds01" -LDSPort 50389 `
     -LDSBaseDN "DC=rbac,DC=corp,DC=local" -WhatIf
 ```
 
 ### Export partiel
+
 ```powershell
 # Exporter uniquement les utilisateurs et groupes, sans ordinateurs ni délégations
 .\scripts\Export-ADToLDS.ps1 ... -SkipComputers -SkipDelegations
@@ -102,7 +110,7 @@ ldifde -i -u -f "C:\Windows\ADAM\MS-User.ldf" ^
 
 ## Structure créée dans LDS
 
-```
+```text
 DC=rbac,DC=corp,DC=local          ← LDSBaseDN (doit exister avant l'exécution)
 ├── OU=Users                       ← Utilisateurs actifs (inetOrgPerson)
 ├── OU=Groups                      ← Groupes de sécurité (inetOrgPerson + métadonnées JSON)
@@ -113,6 +121,7 @@ DC=rbac,DC=corp,DC=local          ← LDSBaseDN (doit exister avant l'exécution
 Chaque objet LDS stocke ses métadonnées étendues dans l'attribut `description` au format JSON :
 
 **Exemple utilisateur :**
+
 ```json
 {
   "objectType": "user",
@@ -126,6 +135,7 @@ Chaque objet LDS stocke ses métadonnées étendues dans l'attribut `description
 ```
 
 **Exemple délégation :**
+
 ```json
 {
   "objectType": "delegation",
@@ -164,7 +174,7 @@ Chaque objet LDS stocke ses métadonnées étendues dans l'attribut `description
 ## Fichiers générés
 
 | Fichier | Contenu |
-|---|---|
+| --- | --- |
 | `AD-LDS-Migration_YYYYMMDD_HHmmss.log` | Journal détaillé de l'exécution |
 | `AD-LDS-Migration_Report_YYYYMMDD_HHmmss.csv` | Rapport CSV : objet, statut, DN source/cible |
 
@@ -173,7 +183,7 @@ Chaque objet LDS stocke ses métadonnées étendues dans l'attribut `description
 ## Paramètres du script
 
 | Paramètre | Obligatoire | Défaut | Description |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `LDSServer` | Oui | — | Hôte du serveur LDS |
 | `LDSPort` | Non | 389 | Port LDAP LDS |
 | `LDSBaseDN` | Oui | — | DN de base de l'instance LDS |
